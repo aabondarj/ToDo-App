@@ -32,3 +32,8 @@
 	color: #737373;
 }
 
+.done {
+	color: #cdcdcd;
+	text-decoration: line-through;
+}
+
