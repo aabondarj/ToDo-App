@@ -14,11 +14,22 @@ class App extends Component {
   maxId = 100;
   state ={
     todoData: [
-      {liClass: '', divClass: 'view', description: 'Completed task', created: 'created 17 seconds ago', id: 1},
-      {liClass: 'editing', divClass: 'view', description: 'Editing task', created: 'created 5 minutes ago', id: 2},
-      {liClass: '', divClass: 'view', description: 'Active task', created: 'created 5 minutes ago', id: 3}
+      this.createTodoItem('Completed task'),
+      this.createTodoItem('Editing task', 'editing'),
+      this.createTodoItem('Active task')
     ]
   };
+
+  createTodoItem(description, liClass='') {
+    return {
+      liClass, 
+      divClass: 'view', 
+      description,
+      done: false, 
+      created: 'created 17 seconds ago', 
+      id: this.maxId++
+    }
+  }
 
   deleteItem = (id) => {
     this.setState(({todoData}) => {
@@ -35,13 +46,7 @@ class App extends Component {
 
   addItem = (text) => {
     //generate id ?
-    const newItem = {
-      liClass: '', 
-      divClass: 'view', 
-      description: text, 
-      created: 'created 17 seconds ago', 
-      id: this.maxId++
-    }
+    const newItem = this.createTodoItem(text)
 
     //add element in array ?
     this.setState(({todoData}) => {
@@ -55,20 +60,52 @@ class App extends Component {
       };
     });
   };
+
+  toogleProperty(arr, id, propName) {
+    const idx = arr.findIndex((el) => el.id === id)
+
+      // 1. update object
+      const oldItem = arr[idx];
+      const newItem = {...oldItem, [propName]: !oldItem[propName]};
+
+      // 2. construct new array
+      return [
+        ...arr.slice(0,idx),
+        newItem,
+        ...arr.slice(idx + 1)
+      ];
+  }
+
+  onToggleDone = (id) => {
+    this.setState(({todoData}) => {
+
+      return {
+        todoData: this.toogleProperty(todoData, id, 'done')
+      };
+
+    });
+  };
   
   render() {
+
+    const {todoData} = this.state;
+
+    const doneCount = todoData.filter((el) => el.done).length;
+    const todoCount = todoData.length - doneCount;
+
     return(
       <section className="todoapp">
         <header className="header">
          <AppHeader />
-         <NewTaskForm />
+         <NewTaskForm onItemAdded={this.addItem}/>
         </header>
         <section className='main'>
           <TaskList 
-          todos = {this.state.todoData}
-          onDeleted={this.deleteItem}/>
-          <ItemAddForm onItemAdded={this.addItem}/>
-          <Footer />
+          todos = {todoData}
+          onDeleted={this.deleteItem}
+          onToggleDone={this.onToggleDone}/>
+          {/* <ItemAddForm onItemAdded={this.addItem}/> */}
+          <Footer done={todoCount}/>
         </section>
       </section>
     );

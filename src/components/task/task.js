@@ -3,21 +3,12 @@ import './task.css'
 
 export default class Task extends Component {
 
-  state = {
-    done: false
-  }
-
-  onLabelClick = () => {
-    this.setState(({done}) => {
-      return {
-        done: !done
-      }
-    });
-  };
-
   render() {
-    const {divClass, description, created, onDeleted} = this.props;
-    const {done} = this.state;
+    const {
+      divClass, description, created, 
+      onDeleted, 
+      onToggleDone,
+      done} = this.props;
 
     let descriptionClassNames = "description"
 
@@ -31,7 +22,8 @@ export default class Task extends Component {
         <label>
           <span 
             className={descriptionClassNames}
-            onClick={this.onLabelClick}>
+            onClick={onToggleDone}
+            onToggleDone>
             {description}
           </span>
           <span className="created">{created}</span>

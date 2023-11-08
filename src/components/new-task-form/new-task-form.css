@@ -1,7 +1,9 @@
 .new-todo {
 	position: relative;
+	flex-grow: 1;
 	margin: 0;
-	width: 100%;
+	margin-right: 3px;
+	width: auto;
 	font-size: 24px;
 	font-family: inherit;
 	font-weight: inherit;
@@ -20,4 +22,8 @@
 	border: none;
 	background: rgba(0, 0, 0, 0.003);
 	box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+}
+
+.btn {
+	flex-grow: 1;
 }
